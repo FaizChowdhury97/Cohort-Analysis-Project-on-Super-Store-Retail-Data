@@ -1,19 +1,18 @@
 # Cohort-Analysis-Project-on-Super-Store-Retail-Data
 
-Cohort Analysis Project on Superstore Retail Data
-This repository contains a cohort analysis project based on a superstore retail dataset. The dataset was obtained from Kaggle.
+This repository contains a cohort analysis project based on a Kaggle superstore retail dataset.
 
 # Dataset Attribute Information
 
-InvoiceNo: Invoice number. Nominal, a 6-digit integral number uniquely assigned to each transaction. If this code starts with the letter 'c', it indicates a cancellation.
-StockCode: Product (item) code. Nominal, a 5-digit integral number uniquely assigned to each distinct product.
-Description: Product (item) name. Nominal.
-Quantity: The quantities of each product (item) per transaction. Numeric.
-InvoiceDate: Invoice Date and time. Numeric, the day and time when each transaction was generated.
-UnitPrice: Unit price. Numeric, Product price per unit in sterling.
-CustomerID: Customer number. Nominal, a 5-digit integral number uniquely assigned to each customer.
-Country: Country name. Nominal, the name of the country where each customer resides.
+- InvoiceNo: Invoice number. Nominal, a 6-digit integral number uniquely assigned to each transaction. If this code starts with the letter 'c', it indicates a cancellation.
+- Quantity: The quantities of each product (item) per transaction. Numeric.
+- InvoiceDate: Invoice Date and time. Numeric, the day and time when each transaction was generated.
+- UnitPrice: Unit price. Numeric, Product price per unit in sterling.
+- CustomerID: Customer number. Nominal, a 5-digit integral number uniquely assigned to each customer.
+- Country: Country name. Nominal, the name of the country where each customer resides.
+
 # Data Preprocessing Steps
+
 After obtaining the dataset, the following preprocessing steps were performed:
 
 1. Fixed data types:
@@ -25,18 +24,20 @@ After obtaining the dataset, the following preprocessing steps were performed:
 
 2. Removed empty values from CustomerID.
 
-3. Removed canceled orders (invoices starting with 'C') from InvoiceNo.
+3. Removed canceled orders (invoices starting with 'C') from Invoice No.
 
-4. Created a "sales" column by multiplying Quantity and UnitPrice columns.
+4. Created a "sales" column by multiplying the Quantity and UnitPrice columns.
 
 5. Removed sales entries with 0 values.
 
 # Additional Tables Created
+
 Two additional tables were created for the project:
 
 ### 1. DimCustomers:
 
     - Contains CustomerID, First Transaction Month, and First Transaction Week.
+
 ### 2. DimDate:
 
    - Contains all unique dates from 12/1/2010 to 12/9/2011.
@@ -53,7 +54,9 @@ Eighteen DAX measures were created for cohort analysis:
 
 1. Active Customers = DISTINCTCOUNT(FactSales[CustomerID])
 
-2. Churned Customers = SWITCH( TRUE(), ISBLANK([Retention Rate]), BLANK(), [New Customers] - [Cohort Performance] )
+
+2. Churned Customers = SWITCH(TRUE(), ISBLANK([Retention Rate]), BLANK(), [New Customers] - [Cohort Performance])
+
 
 3. Churned Rate = DIVIDE([Churned Customers],[New Customers])
 
