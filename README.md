@@ -1,5 +1,6 @@
 # Cohort-Analysis-Project-on-Super-Store-Retail-Data
 
+
 This repository contains a cohort analysis project based on a Kaggle superstore retail dataset.
 
 # Dataset Attribute Information
@@ -17,16 +18,15 @@ After obtaining the dataset, the following preprocessing steps were performed:
 
 1. Fixed data types:
    
-   - InvoiceNo to text
-   - StockCode to text
-   - InvoiceDate to date (mm/dd/yyyy)
-   - CustomerID to whole number
+   - `InvoiceNo` to text
+   - `InvoiceDate` to date (mm/dd/yyyy)
+   - `CustomerID` to whole number
 
-2. Removed empty values from CustomerID.
+2. Removed empty values from `CustomerID`.
 
-3. Removed canceled orders (invoices starting with 'C') from Invoice No.
+3. Removed canceled orders (invoices starting with 'C') from `InvoiceNo`.
 
-4. Created a "sales" column by multiplying the Quantity and UnitPrice columns.
+4. Created a "sales" column by multiplying the `Quantity` and `Price` columns.
 
 5. Removed sales entries with 0 values.
 
@@ -36,18 +36,21 @@ Two additional tables were created for the project:
 
 ### 1. DimCustomers:
 
-    ○ Contains CustomerID and First Transaction Month.
+    ○ Contains `CustomerID` and First `Transaction Month`.
 
 ### 2. DimDate:
 
     ○ Contains all unique dates from 1/1/2009 to 12/31/2011.
-    ○ Includes Start of Month attributes.
+    ○ Includes `Start of Month` attributes.
 
 # Data Modeling in Power BI
-The following data modeling steps were performed in Power BI: image
+The following data modeling steps were performed in Power BI: 
+
+![ss7](https://github.com/user-attachments/assets/9e77bafb-b1d9-42ee-89fe-c96b3d2c08b2)
+
  
- - Connected CustomerID from DimCustomers to CustomerID of the main table FactSales.
- - Connected Date from DimDate to InvoiceDate of FactSales.
+ - Connected `CustomerID` from **DimCustomers** to `CustomerID` of the main table **FactSales**.
+ - Connected `Date` from **DimDate** to `InvoiceDate` of **FactSales**.
    
 # DAX Measures
 Eighteen DAX measures were created for cohort analysis:
@@ -75,6 +78,32 @@ Eighteen DAX measures were created for cohort analysis:
 11. Validation =  [New Customers] + [Retained Customers] + [Recovered Customers]
 
 # Visualizations
+
 Finally, the project is ready to create visualizations based on the calculated DAX measures to analyze and present the cohort analysis results.
 
-Monthly Cohort Analysis:
+### Executive Dashboard:
+---
+
+![SS1](https://github.com/user-attachments/assets/a7c74728-dfa0-4090-a3a0-080b346e7853)
+
+### Visual Analysis:
+---
+
+![SS2](https://github.com/user-attachments/assets/11e4010f-13d1-47cc-a49c-e40e6757177a)
+
+### Cohort Analysis:
+---
+
+![ss3](https://github.com/user-attachments/assets/9c8c259a-39dc-40fb-a0f7-73377bff0c47)
+
+
+### Trend Analysis:
+---
+
+![ss4](https://github.com/user-attachments/assets/11e383ae-cbff-449e-9764-4ced66a9ac09)
+
+
+
+
+
+
