@@ -36,7 +36,7 @@ Two additional tables were created for the project:
 
 ### 1. DimCustomers:
 
-      - Contains CustomerID, First Transaction Month, and First Transaction Week.
+- Contains CustomerID, First Transaction Month, and First Transaction Week.
 
 ### 2. DimDate:
 
