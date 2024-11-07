@@ -36,12 +36,12 @@ Two additional tables were created for the project:
 
 ### 1. DimCustomers:
 
- -     Contains CustomerID, First Transaction Month, and First Transaction Week.
+   - Contains   CustomerID and First   Transaction Month.
 
 ### 2. DimDate:
 
- -     Contains all unique dates from 12/1/2010 to 12/9/2011.
- -     Includes Start of Month and Start of Week attributes.
+   - Contains all unique dates from 1/1/2009 to 12/31/2011.
+   - Includes    Start of Month attributes.
 
 # Data Modeling in Power BI
 The following data modeling steps were performed in Power BI: image
