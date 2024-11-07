@@ -17,7 +17,7 @@ After obtaining the dataset, the following preprocessing steps were performed:
 
 1. Fixed data types:
    
-- InvoiceNo to text
+   - InvoiceNo to text
    - StockCode to text
    - InvoiceDate to date (mm/dd/yyyy)
    - CustomerID to whole number
