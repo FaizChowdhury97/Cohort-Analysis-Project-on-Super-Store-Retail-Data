@@ -4,12 +4,12 @@ This repository contains a cohort analysis project based on a Kaggle superstore 
 
 # Dataset Attribute Information
 
-- InvoiceNo: Invoice number. Nominal, a 6-digit integral number uniquely assigned to each transaction. If this code starts with the letter 'c', it indicates a cancellation.
-- Quantity: The quantities of each product (item) per transaction. Numeric.
-- InvoiceDate: Invoice Date and time. Numeric, the day and time when each transaction was generated.
-- UnitPrice: Unit price. Numeric, Product price per unit in sterling.
-- CustomerID: Customer number. Nominal, a 5-digit integral number uniquely assigned to each customer.
-- Country: Country name. Nominal, the name of the country where each customer resides.
+**InvoiceNo**: Invoice number. Nominal, a 6-digit integral number uniquely assigned to each transaction. If this code starts with the letter 'c', it indicates a cancellation.
+### - Quantity: The quantities of each product (item) per transaction. Numeric.
+### - InvoiceDate: Invoice Date and time. Numeric, the day and time when each transaction was generated.
+### - UnitPrice: Unit price. Numeric, Product price per unit in sterling.
+### - CustomerID: Customer number. Nominal, a 5-digit integral number uniquely assigned to each customer.
+### - Country: Country name. Nominal, the name of the country where each customer resides.
 
 # Data Preprocessing Steps
 
@@ -54,43 +54,27 @@ Eighteen DAX measures were created for cohort analysis:
 
 1. Active Customers = DISTINCTCOUNT(FactSales[CustomerID])
 
-
 2. Churned Customers = SWITCH(TRUE(), ISBLANK([Retention Rate]), BLANK(), [New Customers] - [Cohort Performance])
-
 
 3. Churned Rate = DIVIDE([Churned Customers],[New Customers])
 
 4. Cohort Performance = VAR _minDate = MIN(DimDate[Start of Month]) VAR _maxDate = MAX(DimDate[Start of Month]) RETURN CALCULATE( [Active Customers], REMOVEFILTERS(DimDate[Start of Month]), RELATEDTABLE(DimCustomers), DimCustomers[First Transaction Month] >= _minDate && DimCustomers[First Transaction Month] <= _maxDate )
 
-5. Lost Customers = VAR _customersThisMonth = VALUES(FactSales[CustomerID]) VAR _customersLastMonth = CALCULATETABLE( VALUES(FactSales[CustomerID]), PREVIOUSMONTH(DimDate[Start of Month]) ) VAR _lostCustomers = EXCEPT( _customersLastMonth, _customersThisMonth ) RETURN COUNTROWS(_lostCustomers)
+5. Difference = [Active Customers] - [Validation]
 
-6. New Customers = CALCULATE([Active Customers], FactSales[Months Since First Transaction] = 0)
+6. Lost Customers = VAR _customersThisMonth = VALUES(FactSales[CustomerID]) VAR _customersLastMonth = CALCULATETABLE( VALUES(FactSales[CustomerID]), PREVIOUSMONTH(DimDate[Start of Month]) ) VAR _lostCustomers = EXCEPT( _customersLastMonth, _customersThisMonth ) RETURN COUNTROWS(_lostCustomers)
 
-7. Recovered Customers = VAR _customersThisMonth = VALUES(FactSales[CustomerID]) VAR _customersLastMonth = CALCULATETABLE( VALUES(FactSales[CustomerID]), PREVIOUSMONTH(DimDate[Start of Month]) ) VAR _newCustomers = CALCULATETABLE( VALUES(FactSales[CustomerID]), FactSales[Months Since First Transaction] = 0 ) VAR _recoveredCustomers = EXCEPT( EXCEPT(_customersThisMonth, _customersLastMonth), _newCustomers ) RETURN COUNTROWS(_recoveredCustomers)
+7. New Customers = CALCULATE([Active Customers], FactSales[Months Since First Transaction] = 0)
 
-8. Retained Customers = VAR _customersThisMonth = VALUES(FactSales[CustomerID]) VAR _customersLastMonth = CALCULATETABLE( VALUES(FactSales[CustomerID]), PREVIOUSMONTH(DimDate[Start of Month]) ) VAR _retainedCustomers = INTERSECT( _customersLastMonth, _customersThisMonth ) RETURN COUNTROWS(_retainedCustomers)
+8. Recovered Customers = VAR _customersThisMonth = VALUES(FactSales[CustomerID]) VAR _customersLastMonth = CALCULATETABLE( VALUES(FactSales[CustomerID]), PREVIOUSMONTH(DimDate[Start of Month]) ) VAR _newCustomers = CALCULATETABLE( VALUES(FactSales[CustomerID]), FactSales[Months Since First Transaction] = 0 ) VAR _recoveredCustomers = EXCEPT( EXCEPT(_customersThisMonth, _customersLastMonth), _newCustomers ) RETURN COUNTROWS(_recoveredCustomers)
 
-9. Retention Rate = DIVIDE([Cohort Performance],[New Customers])
+9. Retained Customers = VAR _customersThisMonth = VALUES(FactSales[CustomerID]) VAR _customersLastMonth = CALCULATETABLE( VALUES(FactSales[CustomerID]), PREVIOUSMONTH(DimDate[Start of Month]) ) VAR _retainedCustomers = INTERSECT( _customersLastMonth, _customersThisMonth ) RETURN COUNTROWS(_retainedCustomers)
 
-10. Active Customers LW = CALCULATE( [Active Customers], DATEADD(DimDate[Date], -7, DAY) )
+10. Retention Rate = DIVIDE([Cohort Performance],[New Customers])
 
-11. Weekly Churned Customers = SWITCH( TRUE(), ISBLANK([Weekly Retention Rate]), BLANK(), [Weekly New Customers] - [Weekly Cohort Performance] )
-
-12. Weekly Churned Rate = DIVIDE([Weekly Churned Customers],[Weekly New Customers])
-
-13. Weekly Cohort Performance = VAR _minDate = MIN(DimDate[Start of Week]) VAR _maxDate = MAX(DimDate[Start of Week]) RETURN CALCULATE( [Active Customers], REMOVEFILTERS(DimDate[Start of Week]), RELATEDTABLE(DimCustomers), DimCustomers[First Transaction Week] >= _minDate && DimCustomers[First Transaction Week] <= _maxDate )
-
-14. Weekly Lost Customers = VAR _customersThisWeek = VALUES(FactSales[CustomerID]) VAR _customersLastWeek = CALCULATETABLE( VALUES(FactSales[CustomerID]), DATEADD(DimDate[Date], -7,DAY) ) VAR _weeklylostCustomers = EXCEPT( _customersLastWeek, _customersThisWeek ) RETURN COUNTROWS(_weeklylostCustomers)
-
-15. Weekly New Customers = CALCULATE([Active Customers], FactSales[Weeks Since First Transaction] = 0)
-
-16. Weekly Recovered Customers = VAR _customersThisWeek = VALUES(FactSales[CustomerID]) VAR _customersLastWeek = CALCULATETABLE( VALUES(FactSales[CustomerID]), DATEADD(DimDate[Date], -7, DAY) ) VAR _newCustomers = CALCULATETABLE( VALUES(FactSales[CustomerID]), FactSales[Weeks Since First Transaction] = 0 ) VAR _weeklyrecoveredCustomers = EXCEPT( EXCEPT(_customersThisWeek, _customersLastWeek), _newCustomers ) RETURN COUNTROWS(_weeklyrecoveredCustomers)
-
-17. Weekly Retained Customers = VAR _customersThisWeek = VALUES(FactSales[CustomerID]) VAR _customersLastWeek = CALCULATETABLE( VALUES(FactSales[CustomerID]), DATEADD(DimDate[Date], -7,DAY) ) VAR _weeklyretainedCustomers = INTERSECT( _customersLastWeek, _customersThisWeek ) RETURN COUNTROWS(_weeklyretainedCustomers)
-
-18. Weekly Retention Rate = DIVIDE([Weekly Cohort Performance],[Weekly New Customers])
+11. Validation =  [New Customers] + [Retained Customers] + [Recovered Customers]
 
 # Visualizations
-Finally, the project is ready for creating visualizations based on the calculated DAX measures to analyze and present the cohort analysis results.
+Finally, the project is ready to create visualizations based on the calculated DAX measures to analyze and present the cohort analysis results.
 
 Monthly Cohort Analysis:
